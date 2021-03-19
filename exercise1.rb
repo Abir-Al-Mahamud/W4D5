@@ -34,10 +34,14 @@ def largest_contiguous_subsum(arr)
     subs = []
     before_assessment_time = Time.now #O(1)
     
-    (0...arr.length).each do |start_index|
+    (0...arr.length).each do |start_index| #O(n) => n is dependent on arr.length
         (start_index...arr.length).each do |end_index|
             subs << arr[start_index..end_index]
         end
+    end
+
+    (0...5).each do |el| # O(1) => range is fixed
+        p el
     end
 
     max_sum = subs.map(&:sum).max
@@ -49,25 +53,38 @@ end
 def largest_contiguous_subsum_better(arr)
     curr_sum = 0
     largest_sum = 0
-    i = 0
-    idx2 = 0
     before_assessment_time = Time.now #O(1)
-    
-    while i < arr.length
-        curr_sum = arr[i..idx2].sum
-        if curr_sum > largest_sum
+
+    arr.each_with_index do |ele, i|
+        curr_sum = arr[0..i].to_a.sum
+        if curr_sum < 0
+            arr = arr.drop(i+1)
+            if curr_sum > largest_sum
+                largest_sum = curr_sum
+            end
+        elsif curr_sum > largest_sum
             largest_sum = curr_sum
         end
-
-        if idx2 > arr.length-1   
-            i+=1 
-            idx2 = i
-        end
-        idx2 += 1
     end
+    
+    #     i = 0
+    #     idx2 = 0
+    
+    # while i < arr.length
+    #     curr_sum = arr[i..idx2].sum
+    #     if curr_sum > largest_sum
+    #         largest_sum = curr_sum
+    #     end
+
+    #     if idx2 > arr.length-1   
+    #         i+=1 
+    #         idx2 = i
+    #     end
+    #     idx2 += 1
+    # end
     puts "Time complexity for while loop: #{(Time.now - before_assessment_time)} " #O(1)
     puts largest_sum
 end
 list = [2, 3, -6, 7, -6, 7]
-largest_contiguous_subsum(list) # => 8 (from [7, -6, 7])
+# largest_contiguous_subsum(list) # => 8 (from [7, -6, 7])
 largest_contiguous_subsum_better(list) # => 8 (from [7, -6, 7])
